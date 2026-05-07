@@ -1,0 +1,110 @@
+---
+engine: julia
+execute:
+    cache: true
+---
+
+# Differential Equations and Nonlinear Oscillations
+
+> Numerical methods for solving ordinary differential equations.
+> Applying those methods to nonlinear systems.
+
+
+```{julia}
+using CairoMakie, LaTeXStrings, LinearAlgebra
+```
+
+## Nonlinear Oscillations
+
+$$
+\begin{equation}
+F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
+\end{equation} 
+$$ {#eq-spring-force}
+
+## Orbit Around a Point Mass
+
+```{julia}
+const G = 1.0
+const M = 1.0;
+```
+
+```{julia}
+function f(t, state)
+    pos, vel = state
+    acc = - G * M * pos / norm(pos)^3
+    return [vel, acc]
+end;
+```
+
+```{julia}
+mutable struct Star{T}
+    state::Array{T}
+    pos_hist
+end;
+```
+
+```{julia}
+function rk4(t, y, force, dt)
+    """
+    Function to calculate the next timestep using:
+        4th-order Runge-Kutta
+    """
+    k1 = force(t, y)
+    k2 = force(t + 0.5 * dt, y + 0.5 * k1 * dt)
+    k3 = force(t + 0.5 * dt, y + 0.5 * k2 * dt)
+    k4 = force(t + dt, y + k3 * dt)
+
+    y_new = y + dt * (k1 + 2.0*k2 + 2.0*k3 + k4) / 6.0
+end;
+```
+
+```{julia}
+function orbit(t_start, t_end, dt, star, force)
+    t = t_start
+    while t < t_end 
+        new_state = rk4(t, star.state, force, dt)
+        star.state = new_state
+        push!(star.pos_hist, star.state[1])
+        t += dt
+    end
+    star.pos_hist = reduce(hcat, star.pos_hist)'
+end;
+```
+
+```{julia}
+start_pos = [1.0, 0.0, 0.0]
+start_vel = [0.0, 1.0, 0.0]
+start_state = [start_pos, start_vel]
+star = Star(start_state, [start_state[1]])
+
+h = 1e-4
+norbits = 1.0
+t_end = 2 * pi * norbits
+orbit(0.0, t_end, h, star, f);
+```
+
+```{julia}
+function plot_orbit(star, name)
+    inch = 96
+    pt = 4/3
+
+    fig = Figure(size=(10inch, 7inch), fontsize=16pt)
+    ax = Axis(fig[1, 1], 
+            xlabel = "x",
+            ylabel = "y",
+            title=L"Orbit around a Point Mass ($\Delta t$ = %$(h))",
+            aspect = DataAspect())
+
+    plot!(ax, star.pos_hist[:, 1], star.pos_hist[:, 2])
+    save(name, fig)
+end;
+```
+
+```{julia}
+with_theme(theme_latexfonts()) do
+    plot_orbit(star, "images/rk4.svg")
+end;
+```
+
+![Orbit around a point mass using RK4](images/rk4.svg){#fig-rk4}
