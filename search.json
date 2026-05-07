@@ -20,13 +20,33 @@
     ]
   },
   {
+    "objectID": "chapters/ch1/diffeq.html",
+    "href": "chapters/ch1/diffeq.html",
+    "title": "2  Differential Equations and Nonlinear Oscillations",
+    "section": "",
+    "text": "2.1 Nonlinear Oscillations\n\\[\nF_{k}(x) + F_{\\text{ext}}(x,t) = m \\frac{\\mathrm{d}^{2} x}{\\mathrm{d} t^{2}}\n\\tag{2.1}\\]",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Differential Equations and Nonlinear Oscillations</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/ch1/diffeq.html#orbit-around-a-point-mass",
+    "href": "chapters/ch1/diffeq.html#orbit-around-a-point-mass",
+    "title": "2  Differential Equations and Nonlinear Oscillations",
+    "section": "2.2 Orbit Around a Point Mass",
+    "text": "2.2 Orbit Around a Point Mass\n\nconst G = 1.0\nconst M = 1.0;\n\n\nfunction f(t, state)\n    pos, vel = state\n    acc = - G * M * pos / norm(pos)^3\n    return [vel, acc]\nend;\n\n\nmutable struct Star{T}\n    state::Array{T}\n    pos_hist\nend;\n\n\nfunction rk4(t, y, force, dt)\n    \"\"\"\n    Function to calculate the next timestep using:\n        4th-order Runge-Kutta\n    \"\"\"\n    k1 = force(t, y)\n    k2 = force(t + 0.5 * dt, y + 0.5 * k1 * dt)\n    k3 = force(t + 0.5 * dt, y + 0.5 * k2 * dt)\n    k4 = force(t + dt, y + k3 * dt)\n\n    y_new = y + dt * (k1 + 2.0*k2 + 2.0*k3 + k4) / 6.0\nend;\n\n\nfunction orbit(t_start, t_end, dt, star, force)\n    t = t_start\n    while t &lt; t_end \n        new_state = rk4(t, star.state, force, dt)\n        star.state = new_state\n        push!(star.pos_hist, star.state[1])\n        t += dt\n    end\n    star.pos_hist = reduce(hcat, star.pos_hist)'\nend;\n\n\nstart_pos = [1.0, 0.0, 0.0]\nstart_vel = [0.0, 1.0, 0.0]\nstart_state = [start_pos, start_vel]\nstar = Star(start_state, [start_state[1]])\n\nh = 1e-4\nnorbits = 1.0\nt_end = 2 * pi * norbits\norbit(0.0, t_end, h, star, f);\n\n\nfunction plot_orbit(star, name)\n    inch = 96\n    pt = 4/3\n\n    fig = Figure(size=(10inch, 7inch), fontsize=16pt)\n    ax = Axis(fig[1, 1], \n            xlabel = \"x\",\n            ylabel = \"y\",\n            title=L\"Orbit around a Point Mass ($\\Delta t$ = %$(h))\",\n            aspect = DataAspect())\n\n    plot!(ax, star.pos_hist[:, 1], star.pos_hist[:, 2])\n    save(name, fig)\nend;\n\n\nwith_theme(theme_latexfonts()) do\n    plot_orbit(star, \"images/rk4.svg\")\nend;\n\n\n\n\n\n\n\nFigure 2.1: Orbit around a point mass using RK4",
+    "crumbs": [
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Differential Equations and Nonlinear Oscillations</span>"
+    ]
+  },
+  {
     "objectID": "summary.html",
     "href": "summary.html",
-    "title": "2  Summary",
+    "title": "3  Summary",
     "section": "",
     "text": "In summary, this book has no content whatsoever.",
     "crumbs": [
-      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Summary</span>"
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Summary</span>"
     ]
   },
   {
