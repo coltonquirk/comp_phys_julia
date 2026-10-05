@@ -1,5 +1,3 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
-
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+The idea for this book came from my love and appretiation of the book Compuational Physics Problem Solving with Python by @landauCompPhys24 and the Julia Programming Language.

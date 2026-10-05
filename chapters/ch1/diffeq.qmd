@@ -11,6 +11,8 @@ execute:
 
 
 ```{julia}
+using Pkg
+Pkg.activate("../")
 using CairoMakie, LaTeXStrings, LinearAlgebra
 ```
 
@@ -85,7 +87,7 @@ orbit(0.0, t_end, h, star, f);
 ```
 
 ```{julia}
-function plot_orbit(star, name)
+function plot_orbit(star, name; skip=5)
     inch = 96
     pt = 4/3
 
@@ -96,14 +98,14 @@ function plot_orbit(star, name)
             title=L"Orbit around a Point Mass ($\Delta t$ = %$(h))",
             aspect = DataAspect())
 
-    plot!(ax, star.pos_hist[:, 1], star.pos_hist[:, 2])
+    lines!(ax, star.pos_hist[begin:skip:end, 1], star.pos_hist[begin:skip:end, 2])
     save(name, fig)
 end;
 ```
 
 ```{julia}
 with_theme(theme_latexfonts()) do
-    plot_orbit(star, "images/rk4.svg")
+    plot_orbit(star, "images/rk4.svg"; skip=100)
 end;
 ```
 

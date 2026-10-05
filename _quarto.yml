@@ -3,11 +3,12 @@ project:
 
 book:
   title: "Computational Physics: Problem Solving with Julia"
-  author: "Norah Jones"
+  author: "Colton Quirk"
   date: "5/1/2026"
   chapters:
     - index.qmd
     - intro.qmd
+    - chapters/ch1/diffeq.qmd
     - summary.qmd
     - references.qmd
 

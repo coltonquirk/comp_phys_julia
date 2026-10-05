@@ -1,3 +1,4 @@
 # Summary
 
-In summary, this book has no content whatsoever.
+We have covered only a small fraction off what is possible with Julia in Computational Physics.
+I hope this book has inspired you to go on and solve physics problems with your computer on your own.
