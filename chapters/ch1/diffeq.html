@@ -248,16 +248,8 @@ window.Quarto = {
 <blockquote class="blockquote">
 <p>Numerical methods for solving ordinary differential equations. Applying those methods to nonlinear systems.</p>
 </blockquote>
-<div id="2" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">activate</span>(<span class="st">"../"</span>);</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span>, <span class="bu">LaTeXStrings</span>, <span class="bu">LinearAlgebra;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<div class="ansi-escaped-output">
-<pre><span class="ansi-green-fg ansi-bold">  Activating</span> project at `~/Desktop/comp_phys_julia/chapters`
-</pre>
-</div>
-</div>
+<div id="4" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">CairoMakie</span>, <span class="bu">LaTeXStrings</span>, <span class="bu">LinearAlgebra;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="nonlinear-oscillations" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="nonlinear-oscillations"><span class="header-section-number">2.1</span> Nonlinear Oscillations</h2>
@@ -267,24 +259,24 @@ F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
 </section>
 <section id="orbit-around-a-point-mass" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="orbit-around-a-point-mass"><span class="header-section-number">2.2</span> Orbit Around a Point Mass</h2>
-<div id="4" class="cell" data-execution_count="1">
+<div id="6" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> G <span class="op">=</span> <span class="fl">1.0</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> M <span class="op">=</span> <span class="fl">1.0</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="6" class="cell" data-execution_count="1">
+<div id="8" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">f</span>(t, state)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    pos, vel <span class="op">=</span> state</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> <span class="op">-</span> G <span class="op">*</span> M <span class="op">*</span> pos <span class="op">/</span> <span class="fu">norm</span>(pos)<span class="op">^</span><span class="fl">3</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [vel, acc]</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="8" class="cell" data-execution_count="1">
+<div id="10" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">mutable struct</span> Star{T}</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    state<span class="op">::</span><span class="dt">Array{T}</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    pos_hist</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="10" class="cell" data-execution_count="1">
+<div id="12" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">rk4</span>(t, y, force, dt)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">    Function to calculate the next timestep using:</span></span>
@@ -298,7 +290,7 @@ F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    y_new <span class="op">=</span> y <span class="op">+</span> dt <span class="op">*</span> (k1 <span class="op">+</span> <span class="fl">2.0</span><span class="op">*</span>k2 <span class="op">+</span> <span class="fl">2.0</span><span class="op">*</span>k3 <span class="op">+</span> k4) <span class="op">/</span> <span class="fl">6.0</span></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="12" class="cell" data-execution_count="1">
+<div id="14" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">orbit</span>(t_start, t_end, dt, star, force)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> t_start</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> t <span class="op">&lt;</span> t_end </span>
@@ -310,7 +302,7 @@ F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    star.pos_hist <span class="op">=</span> <span class="fu">reduce</span>(hcat, star.pos_hist)<span class="ch">'</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="14" class="cell" data-execution_count="1">
+<div id="16" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>start_pos <span class="op">=</span> [<span class="fl">1.0</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>start_vel <span class="op">=</span> [<span class="fl">0.0</span>, <span class="fl">1.0</span>, <span class="fl">0.0</span>]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>start_state <span class="op">=</span> [start_pos, start_vel]</span>
@@ -321,7 +313,7 @@ F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>t_end <span class="op">=</span> <span class="fl">2</span> <span class="op">*</span> <span class="cn">pi</span> <span class="op">*</span> norbits</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">orbit</span>(<span class="fl">0.0</span>, t_end, h, star, f);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="16" class="cell" data-execution_count="1">
+<div id="18" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plot_orbit</span>(star, name; skip<span class="op">=</span><span class="fl">5</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    inch <span class="op">=</span> <span class="fl">96</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    pt <span class="op">=</span> <span class="fl">4</span><span class="op">/</span><span class="fl">3</span></span>
@@ -337,7 +329,7 @@ F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
 <span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">save</span>(name, fig)</span>
 <span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="18" class="cell" data-execution_count="1">
+<div id="20" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_theme</span>(<span class="fu">theme_latexfonts</span>()) <span class="cf">do</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plot_orbit</span>(star, <span class="st">"images/rk4.svg"</span>; skip<span class="op">=</span><span class="fl">100</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
