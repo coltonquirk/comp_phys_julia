@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "Computational Physics: Problem Solving with Julia",
     "section": "",
-    "text": "Preface\nThis is a Quarto book.\nTo learn more about Quarto books visit https://quarto.org/docs/books.",
+    "text": "Preface\nThe idea for this book came from my love and appretiation of the book Compuational Physics Problem Solving with Python by Landau et al. (2024) and the Julia Programming Language.\n\n\n\n\nLandau, Rubin H., Manuel J. Páez, and Cristian C. Bordeianu. 2024. Computational Physics: Problem Solving with Python. 4th ed. WILEY VCH.",
     "crumbs": [
       "Preface"
     ]
@@ -14,7 +14,7 @@
     "href": "intro.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "This is a book created from markdown and executable code.\nSee Knuth (1984) for additional discussion of literate programming.\n\n\n\n\nKnuth, Donald E. 1984. “Literate Programming.” Comput. J. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "Computational Physics is a fascinating field which the Julia Programming Language is particularly well suited for.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
@@ -34,7 +34,7 @@
     "href": "chapters/ch1/diffeq.html#orbit-around-a-point-mass",
     "title": "2  Differential Equations and Nonlinear Oscillations",
     "section": "2.2 Orbit Around a Point Mass",
-    "text": "2.2 Orbit Around a Point Mass\n\nconst G = 1.0\nconst M = 1.0;\n\n\nfunction f(t, state)\n    pos, vel = state\n    acc = - G * M * pos / norm(pos)^3\n    return [vel, acc]\nend;\n\n\nmutable struct Star{T}\n    state::Array{T}\n    pos_hist\nend;\n\n\nfunction rk4(t, y, force, dt)\n    \"\"\"\n    Function to calculate the next timestep using:\n        4th-order Runge-Kutta\n    \"\"\"\n    k1 = force(t, y)\n    k2 = force(t + 0.5 * dt, y + 0.5 * k1 * dt)\n    k3 = force(t + 0.5 * dt, y + 0.5 * k2 * dt)\n    k4 = force(t + dt, y + k3 * dt)\n\n    y_new = y + dt * (k1 + 2.0*k2 + 2.0*k3 + k4) / 6.0\nend;\n\n\nfunction orbit(t_start, t_end, dt, star, force)\n    t = t_start\n    while t &lt; t_end \n        new_state = rk4(t, star.state, force, dt)\n        star.state = new_state\n        push!(star.pos_hist, star.state[1])\n        t += dt\n    end\n    star.pos_hist = reduce(hcat, star.pos_hist)'\nend;\n\n\nstart_pos = [1.0, 0.0, 0.0]\nstart_vel = [0.0, 1.0, 0.0]\nstart_state = [start_pos, start_vel]\nstar = Star(start_state, [start_state[1]])\n\nh = 1e-4\nnorbits = 1.0\nt_end = 2 * pi * norbits\norbit(0.0, t_end, h, star, f);\n\n\nfunction plot_orbit(star, name)\n    inch = 96\n    pt = 4/3\n\n    fig = Figure(size=(10inch, 7inch), fontsize=16pt)\n    ax = Axis(fig[1, 1], \n            xlabel = \"x\",\n            ylabel = \"y\",\n            title=L\"Orbit around a Point Mass ($\\Delta t$ = %$(h))\",\n            aspect = DataAspect())\n\n    plot!(ax, star.pos_hist[:, 1], star.pos_hist[:, 2])\n    save(name, fig)\nend;\n\n\nwith_theme(theme_latexfonts()) do\n    plot_orbit(star, \"images/rk4.svg\")\nend;\n\n\n\n\n\n\n\nFigure 2.1: Orbit around a point mass using RK4",
+    "text": "2.2 Orbit Around a Point Mass\n\nconst G = 1.0\nconst M = 1.0;\n\n\nfunction f(t, state)\n    pos, vel = state\n    acc = - G * M * pos / norm(pos)^3\n    return [vel, acc]\nend;\n\n\nmutable struct Star{T}\n    state::Array{T}\n    pos_hist\nend;\n\n\nfunction rk4(t, y, force, dt)\n    \"\"\"\n    Function to calculate the next timestep using:\n        4th-order Runge-Kutta\n    \"\"\"\n    k1 = force(t, y)\n    k2 = force(t + 0.5 * dt, y + 0.5 * k1 * dt)\n    k3 = force(t + 0.5 * dt, y + 0.5 * k2 * dt)\n    k4 = force(t + dt, y + k3 * dt)\n\n    y_new = y + dt * (k1 + 2.0*k2 + 2.0*k3 + k4) / 6.0\nend;\n\n\nfunction orbit(t_start, t_end, dt, star, force)\n    t = t_start\n    while t &lt; t_end \n        new_state = rk4(t, star.state, force, dt)\n        star.state = new_state\n        push!(star.pos_hist, star.state[1])\n        t += dt\n    end\n    star.pos_hist = reduce(hcat, star.pos_hist)'\nend;\n\n\nstart_pos = [1.0, 0.0, 0.0]\nstart_vel = [0.0, 1.0, 0.0]\nstart_state = [start_pos, start_vel]\nstar = Star(start_state, [start_state[1]])\n\nh = 1e-4\nnorbits = 1.0\nt_end = 2 * pi * norbits\norbit(0.0, t_end, h, star, f);\n\n\nfunction plot_orbit(star, name; skip=5)\n    inch = 96\n    pt = 4/3\n\n    fig = Figure(size=(10inch, 7inch), fontsize=16pt)\n    ax = Axis(fig[1, 1], \n            xlabel = \"x\",\n            ylabel = \"y\",\n            title=L\"Orbit around a Point Mass ($\\Delta t$ = %$(h))\",\n            aspect = DataAspect())\n\n    lines!(ax, star.pos_hist[begin:skip:end, 1], star.pos_hist[begin:skip:end, 2])\n    save(name, fig)\nend;\n\n\nwith_theme(theme_latexfonts()) do\n    plot_orbit(star, \"images/rk4.svg\"; skip=100)\nend;\n\n\n\n\n\n\n\nFigure 2.1: Orbit around a point mass using RK4",
     "crumbs": [
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Differential Equations and Nonlinear Oscillations</span>"
     ]
@@ -44,7 +44,7 @@
     "href": "summary.html",
     "title": "3  Summary",
     "section": "",
-    "text": "In summary, this book has no content whatsoever.",
+    "text": "We have covered only a small fraction off what is possible with Julia in Computational Physics. I hope this book has inspired you to go on and solve physics problems with your computer on your own.",
     "crumbs": [
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Summary</span>"
     ]
@@ -54,7 +54,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Knuth, Donald E. 1984. “Literate Programming.” Comput.\nJ. 27 (2): 97–111. https://doi.org/10.1093/comjnl/27.2.97.",
+    "text": "Landau, Rubin H., Manuel J. Páez, and Cristian C. Bordeianu. 2024.\nComputational Physics: Problem Solving with Python. 4th ed.\nWILEY VCH.",
     "crumbs": [
       "References"
     ]
