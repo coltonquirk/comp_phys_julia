@@ -5,6 +5,7 @@ book:
   title: "Computational Physics: Problem Solving with Julia"
   author: "Colton Quirk"
   date: "5/1/2026"
+  favicon: logo.png
   chapters:
     - index.qmd
     - intro.qmd

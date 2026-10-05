@@ -4,24 +4,26 @@ execute:
     cache: true
 ---
 
+```{julia}
+#| echo: false
+#| output: false
+using Pkg;
+Pkg.activate("../");
+```
+
 # Differential Equations and Nonlinear Oscillations
 
 > Numerical methods for solving ordinary differential equations.
 > Applying those methods to nonlinear systems.
 
-
 ```{julia}
-using Pkg
-Pkg.activate("../")
-using CairoMakie, LaTeXStrings, LinearAlgebra
+using CairoMakie, LaTeXStrings, LinearAlgebra;
 ```
 
 ## Nonlinear Oscillations
 
 $$
-\begin{equation}
 F_{k}(x) + F_{\text{ext}}(x,t) = m \frac{\mathrm{d}^{2} x}{\mathrm{d} t^{2}}
-\end{equation} 
 $$ {#eq-spring-force}
 
 ## Orbit Around a Point Mass
