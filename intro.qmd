@@ -1,3 +1,4 @@
 # Introduction
 
 Computational Physics is a fascinating field which the Julia Programming Language is particularly well suited for.
+This project will explore topics within Computational Physics and how Julia can be used for the solving of these problems.
