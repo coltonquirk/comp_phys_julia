@@ -14,7 +14,7 @@
     "href": "intro.html",
     "title": "1  Introduction",
     "section": "",
-    "text": "Computational Physics is a fascinating field which the Julia Programming Language is particularly well suited for.",
+    "text": "Computational Physics is a fascinating field which the Julia Programming Language is particularly well suited for. This project will explore topics within Computational Physics and how Julia can be used for the solving of these problems.",
     "crumbs": [
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Introduction</span>"
     ]
